@@ -18,17 +18,17 @@ const Map = ({topology, projection}) => {
 };
 
 class World extends Component {
+	static defaultProps = {width:800, height:800};
 
 	state = {
 		topology: null
 	}
 		
-		projection = d3.geoMercator()
-										.center([0, 5])
-										.scale(150)
-										.rotate([-180, 0])
+		projection = d3.geoEquirectangular()
+										
+										
 
-		componentWillMount () {
+		componentWillMount() {
 				d3.json ('data/world-110m.v1.json',
 								(err, topology) => {
 									this.setState ({
@@ -40,6 +40,7 @@ class World extends Component {
 		}
 
 		render () {
+			
 
 			const { width, height} = this.props,
 						{ topology} = this.state;
