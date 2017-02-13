@@ -1,4 +1,4 @@
-#This is a demo project on: How use **d3** with **react**?
+#This is a demo project on: How to use **d3** with **react**?
 
 Most of this is by following [Swizec Teller](http://tinyurl.com/j8k78oy).
 
