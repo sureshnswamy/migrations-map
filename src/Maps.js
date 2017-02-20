@@ -30,22 +30,21 @@ const Map = ({ topology, projection }) => {
 
 			return (
 			<path d={line([start, middle, end])}
-						style ={{stroke: 'black',
-						strokeWidth: '0.5px',
+						style={{stroke: 'green',
+						strokeWidth: '0.3px',
 						fillOpacity: 0 }} />
 			)
 
  }
 
 const CountryMigrations = ({ data, nameIdMap, centroids }) => {
-     const line = d3.line()
-                   .curve(d3.curveBasis),
-           destination = centroids[data.id];
+     const destination = centroids[data.id];
  
      /*console.log(data.name);*/
  
      const sources =  Object.keys(data.sources)
                             .filter(name => centroids[nameIdMap[name]])
+                            .filter(name => data.sources[name]===0)
                             .map(name => centroids[nameIdMap[name]]);
      return (
          <g>
@@ -82,7 +81,9 @@ class World extends Component {
 	}
 		
 		projection = d3.geoEquirectangular()
-										
+										.center([-50,30])	
+										.scale(200)	
+
 										
 
 		componentWillMount() {
