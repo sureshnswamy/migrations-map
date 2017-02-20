@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import _ from 'lodash';
 import './App.css';
+import Select from 'react-select'
+import 'react-select/dist/react-select.css'
 
 import { World } from './Maps'
 
 class App extends Component {
 
   state = {
-    data: null
+    data: null,
+    focusCountry:""
   }
 
   componentWillMount() { 
@@ -29,18 +32,41 @@ class App extends Component {
       })
   }
 
+
+  changeFocusCountry(country) {
+       this.setState({
+           focusCountry:country.value
+    })
+  }
+
+  get countries() {
+      const { data} = this.state
+
+      if(!data) return []
+
+      return data.map(({id, name}) => ({ value: id, label: name}))
+   
+  }
+
   render() {
-    console.log('here is data', this.state.data);
+    
     
     return (
       <div className="App">
         
         <p className="App-intro">
           
-          <World width={1440} height={1080}
-                 data={this.state.data} nameIdMap={this.state.nameIdMap} />
+          <World width={1440} height={650}
+                 data={this.state.data}
+                  nameIdMap={this.state.nameIdMap}
+                  focusCountry={this.state.focusCountry} />   
 
         </p>
+        <Select name="focusCountry"
+                value=""
+                options={this.countries}  
+                onChange={this.changeFocusCountry.bind(this)} />
+
       </div>
     );
   }

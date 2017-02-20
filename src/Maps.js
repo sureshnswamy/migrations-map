@@ -44,7 +44,7 @@ const CountryMigrations = ({ data, nameIdMap, centroids }) => {
  
      const sources =  Object.keys(data.sources)
                             .filter(name => centroids[nameIdMap[name]])
-                            .filter(name => data.sources[name]===0)
+                            .filter(name => data.sources[name]!==0)
                             .map(name => centroids[nameIdMap[name]]);
      return (
          <g>
@@ -57,18 +57,32 @@ const CountryMigrations = ({ data, nameIdMap, centroids }) => {
  };
 
 
-const Migrations =({topology, projection, data, nameIdMap}) => {
+const Migrations =({topology, projection, data, nameIdMap, focusCounty}) => {
+
+		if (!data) {
+				return null
+		}
+
 		const countries = topojson.feature(topology, topology.objects.countries),
 					path = d3.geoPath(projection),
 					centroids = _.fromPairs(countries.features
 																					 .map(country => [country.id, 
 																					 									path.centroid(country)]))
+			
+				const dataToDraw = data.filter(({ id }) => id === focusCounty)
+															 .filter(({ id }) => !!centroids[id])
+
+
 		return (
 
 				<g> 
-						<CountryMigrations data={data[240]} nameIdMap={nameIdMap}
-																			centroids={centroids} />
+					
+						{dataToDraw.map(data => (
+								<CountryMigrations data={data} nameIdMap={nameIdMap}
+																	centroids={centroids}
+																	key={'migrations-${data.id}'} />
 
+						))}
 				</g>
 		)
 }
@@ -111,7 +125,8 @@ class World extends Component {
 				<svg width={width} height={height}>
 					<Map topology={topology} projection={this.projection} />
 					<Migrations topology={topology} projection={this.projection}
-											data={this.props.data} nameIdMap={this.props.nameIdMap} />
+											data={this.props.data} nameIdMap={this.props.nameIdMap}
+											focusCounty={this.props.focusCounty} />
 				</svg>
 			)
 		}
