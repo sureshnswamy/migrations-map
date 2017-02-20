@@ -21,13 +21,28 @@ const Map = ({ topology, projection }) => {
      );
  };
 
+ const Curve = ({ start, end}) => {
+			const line = d3.line()
+										 .curve(d3.curveBasis),
+				[x1,y1] = start,
+				[x2,y2] = end,
+				middle = [(x1+x2)/2, (y1+y2)/2-200]
+
+			return (
+			<path d={line([start, middle, end])}
+						style ={{stroke: 'black',
+						strokeWidth: '0.5px',
+						fillOpacity: 0 }} />
+			)
+
+ }
 
 const CountryMigrations = ({ data, nameIdMap, centroids }) => {
      const line = d3.line()
                    .curve(d3.curveBasis),
            destination = centroids[data.id];
  
-     console.log(data.name);
+     /*console.log(data.name);*/
  
      const sources =  Object.keys(data.sources)
                             .filter(name => centroids[nameIdMap[name]])
@@ -35,10 +50,8 @@ const CountryMigrations = ({ data, nameIdMap, centroids }) => {
      return (
          <g>
              {sources.map((source, i) => (
-                 <path d={line([destination, source])}
-                 style={{stroke: 'blue',
-                         strokeWidth: '1px'}}
-                 key={`${data.id}-${i}`} />
+                 <Curve start={source} end={destination}
+                 		    key={`${data.id}-${i}`} />
               ))}
          </g>
      )
